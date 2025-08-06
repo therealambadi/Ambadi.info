@@ -5,9 +5,16 @@ import { Input } from "@/components/ui/input"
 import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, useSpring } from "framer-motion"
 import { Github, Linkedin, Mail, Phone, ExternalLink, Code, Cpu, Zap, Terminal, Rocket, Brain, Shield, Award, Users, TrendingUp, Coffee, Clock, Star, Eye, MousePointer, Download, Play, CheckCircle, Target, Briefcase, Trophy, Lightbulb, Flame, Sparkles } from 'lucide-react'
 import Image from "next/image"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useMemo } from "react"
 
 export default function AmbadiPortfolio() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsMobile(window.innerWidth < 768);
+    }
+  }, []);
+
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isHovered, setIsHovered] = useState(false)
   const [currentSection, setCurrentSection] = useState(0)
@@ -174,18 +181,17 @@ console.log("Ready to shock the world!");
     }
   }
 
-  const itemVariants = {
+  const itemVariants = useMemo(() => ({
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
-        duration: 0.6,
+        duration: isMobile ? 0.3 : 0.6,
         ease: "easeOut",
-        ...(window.innerWidth < 768 && { duration: 0.3 })
       }
     }
-  }
+  }), [isMobile]);
 
   const glitchVariants = {
     normal: { x: 0, textShadow: "none" },
@@ -1179,7 +1185,7 @@ console.log("Ready to shock the world!");
                       onTouchEnd={() => setIsHovered(false)}
                     >
                       <Button
-                        onClick={() => window.open(project.demoUrl, '_blank')}
+                        onClick={() => { if (typeof window !== 'undefined') window.open(project.demoUrl, '_blank') }}
                         className="bg-black text-white hover:bg-gray-800 px-4 py-2 font-bold border-2 border-black rounded-none group-hover:bg-white group-hover:text-black"
                       >
                         <Play className="w-4 h-4 mr-2" />
@@ -1195,7 +1201,7 @@ console.log("Ready to shock the world!");
                       onTouchEnd={() => setIsHovered(false)}
                     >
                       <Button
-                        onClick={() => window.open(project.githubUrl, '_blank')}
+                        onClick={() => { if (typeof window !== 'undefined') window.open(project.githubUrl, '_blank') }}
                         variant="outline"
                         className="border-2 border-black text-black hover:bg-black hover:text-white px-4 py-2 font-bold rounded-none group-hover:border-white group-hover:text-white group-hover:hover:bg-white group-hover:hover:text-black"
                       >
